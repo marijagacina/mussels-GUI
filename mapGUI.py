@@ -138,15 +138,13 @@ class InfoWidget(QWidget):
         self.group.addButton(self.long)
 
         self.button_group.setLayout(group_layout)
-
         tab1_layout.addWidget(self.button_group)
         tab1.setLayout(tab1_layout)
-
         self.tab.addTab(tab1,"General")
         self.layout.addWidget(self.tab)
+        
         pg.setConfigOption("background", "w")
         pg.setConfigOption("foreground", "k")
-
         axis = TimeAxisItem(orientation="bottom")
         axis2 = pg.AxisItem(orientation="left")
         self.plot = pg.PlotWidget(axisItems={"bottom": axis, "left": axis2})
