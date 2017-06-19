@@ -95,10 +95,15 @@ class InfoWidget(QWidget):
             mussel = mussels[id]
             if time.time() - mussel.time_last_signal > 5 * 60:
                 mussel.active = 0
-            map.addMarker(mussel.id, mussel.pos_X, mussel.pos_Y, **dict(
-                icon = "http://maps.google.com/mapfiles/ms/icons/blue.png",
-                label = mussel.id
-            ))
+                map.addMarker(mussel.id, mussel.pos_X, mussel.pos_Y, **dict(
+                    icon = "https://cdn2.iconfinder.com/data/icons/connectivity/32/navigation-32.png",
+                    label = mussel.id
+                ))
+            else:
+                map.addMarker(mussel.id, mussel.pos_X, mussel.pos_Y, **dict(
+                    icon = "http://maps.google.com/mapfiles/ms/icons/blue.png",
+                    label = mussel.id
+                ))
         if (selectedId == "") or (not mussels.get(selectedId)):
             self.hide()
             return
@@ -292,7 +297,6 @@ class FindThread(QThread):
             threadLock.release()
 
     def end(self):
-        self.file.close()
         self._stop()
 
 """Class thar represents a mussel and defines the properties that it contains"""
