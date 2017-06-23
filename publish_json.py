@@ -48,7 +48,7 @@ def publish_json(n):
         temp_ = temp[i] + random.normal(0, 1, size=None)
 
         j = json.dumps({"id": i, "pos_x": pos_x, "pos_y": pos_y, "chrg_1": stat_A_, "chrg_2": stat_B_, "v_1": vol_A_, \
-            "v_2": vol_B_, "c_1": curr_A_, "c_2": curr_B_, "press": press[i], "temp": temp[i]})
+            "v_2": vol_B_, "c_1": curr_A_, "c_2": curr_B_, "press": press_, "temp": temp_})
         sock.sendall(j.encode("utf-8"))
 
         print ("Sending", i, pos_x, pos_y, stat_A_, stat_B_, vol_A_, vol_B_, curr_A_, curr_B_, press_, temp_)
