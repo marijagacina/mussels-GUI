@@ -66,9 +66,9 @@ class Window(QWidget):
                 for i in range(len(mussel.time_array)):
                     f.write("time: %02d:%02d:%02d" % ((mussel.time_array[i] % 86400) // 3600 + 2, (mussel.time_array[i] % 3600) // 60, mussel.time_array[i] % 60))
                     f.write(" lat: " + str(mussel.pos_X_array[i]) + " lng: " + str(mussel.pos_Y_array[i]) + "\n")
-                    f.write("\tbattery A voltage: " + str(mussel.vol_A_array[i]) + " current: " + str(mussel.curr_A_array[i]) + "\n" )
-                    f.write("\tbattery B voltage: " + str(mussel.vol_B_array[i]) + " current: " + str(mussel.curr_B_array[i]) + "\n" )
-                    f.write("\tpress: " + str(mussel.press_array[i]) + " temp: " + str(mussel.temp_array[i]) + "\n" )
+                    f.write("\tbattery A voltage: %.2f V current: %.2f mA\n" % (mussel.vol_A_array[i], mussel.curr_A_array[i]))
+                    f.write("\tbattery B voltage: %.2f V current: %.2f mA\n" % (mussel.vol_B_array[i], mussel.curr_B_array[i]))
+                    f.write("\tpress: %.2f kPa temp: %.2f °C\n" % (mussel.press_array[i], mussel.temp_array[i]) )
 
 """Function that sets variable selected id to the key of the clicked marker"""
 def onMarkerLClick(key):
@@ -106,20 +106,21 @@ class InfoWidget(QWidget):
                 ))
         if (selectedId == "") or (not mussels.get(selectedId)):
             self.hide()
-            return
         self.selected_mussel = mussels.get(selectedId)
+        statA = "True" if self.selected_mussel.stat_A==1 else "False"
+        statB = "True" if self.selected_mussel.stat_B==1 else "False"
         self.button_group.setTitle("Mussel ID: \t" + self.selected_mussel.id)
         self.button_group2.setTitle("Mussel ID: \t" + self.selected_mussel.id)
-        self.stat_A.setText("       charging status: " + str(self.selected_mussel.stat_A))
-        self.vol_A.setText("voltage: " + str(self.selected_mussel.vol_A) + " V")
-        self.curr_A.setText("current: " + str(self.selected_mussel.curr_A) + " mA")
-        self.stat_B.setText("       charging status: " + str(self.selected_mussel.stat_B))
-        self.vol_B.setText("voltage: " + str(self.selected_mussel.vol_B) + " V")
-        self.curr_B.setText("current: " + str(self.selected_mussel.curr_B) + " mA")
+        self.stat_A.setText("       charging status: " + statA)
+        self.vol_A.setText("voltage: %.2f V" % self.selected_mussel.vol_A)
+        self.curr_A.setText("current: %.2f mA" % self.selected_mussel.curr_A)
+        self.stat_B.setText("       charging status: " + statB)
+        self.vol_B.setText("voltage: %.2f V" % self.selected_mussel.vol_B)
+        self.curr_B.setText("current: %.2f mA" % self.selected_mussel.curr_B)
         self.lat.setText("latitude: " + str(self.selected_mussel.pos_X))
         self.long.setText("longitude: " + str(self.selected_mussel.pos_Y))
-        self.press.setText("pressure: " + str(self.selected_mussel.press))
-        self.temp.setText("temperature: " + str(self.selected_mussel.temp) + "°C")
+        self.press.setText("pressure: %.2f kPa" % self.selected_mussel.press)
+        self.temp.setText("temperature: %.2f °C" % self.selected_mussel.temp)
         self.show()
 
     """Shows QTabWidget where the information about selected mussel is shown"""
@@ -194,15 +195,15 @@ class InfoWidget(QWidget):
         self.plot.plotItem.hide()
         self.layout.addWidget(self.plot)
         # action events
-        self.vol_A.toggled.connect(lambda: self.plotting_widget(self.selected_mussel.time_array, self.selected_mussel.vol_A_array, "Battery A voltage"))
-        self.curr_A.toggled.connect(lambda: self.plotting_widget(self.selected_mussel.time_array, self.selected_mussel.curr_A_array, "Battery A current"))
-        self.vol_B.toggled.connect(lambda: self.plotting_widget(self.selected_mussel.time_array, self.selected_mussel.vol_B_array, "Battery B voltage"))
-        self.curr_B.toggled.connect(lambda: self.plotting_widget(self.selected_mussel.time_array, self.selected_mussel.curr_B_array, "Battery B current"))
+        self.vol_A.toggled.connect(lambda: self.plotting_widget(self.selected_mussel.time_array, self.selected_mussel.vol_A_array, "Battery A voltage[V]"))
+        self.curr_A.toggled.connect(lambda: self.plotting_widget(self.selected_mussel.time_array, self.selected_mussel.curr_A_array, "Battery A current[mA]"))
+        self.vol_B.toggled.connect(lambda: self.plotting_widget(self.selected_mussel.time_array, self.selected_mussel.vol_B_array, "Battery B voltage[V]"))
+        self.curr_B.toggled.connect(lambda: self.plotting_widget(self.selected_mussel.time_array, self.selected_mussel.curr_B_array, "Battery B current[mA]"))
         self.lat.toggled.connect(lambda: self.plotting_widget(self.selected_mussel.time_array, self.selected_mussel.pos_X_array, "Latitude"))
         self.long.toggled.connect(lambda: self.plotting_widget(self.selected_mussel.time_array, self.selected_mussel.pos_Y_array, "Longitude"))
-        self.press.toggled.connect(lambda: self.plotting_widget(self.selected_mussel.time_array, self.selected_mussel.press_array, "Pressure"))
-        self.temp.toggled.connect(lambda: self.plotting_widget(self.selected_mussel.time_array, self.selected_mussel.temp_array, "Temperature"))
-
+        self.press.toggled.connect(lambda: self.plotting_widget(self.selected_mussel.time_array, self.selected_mussel.press_array, "Pressure[kPa]"))
+        self.temp.toggled.connect(lambda: self.plotting_widget(self.selected_mussel.time_array, self.selected_mussel.temp_array, "Temperature[°C]"))
+    
     """Plots the real-time values sent by the selected mussel"""
     def plotting_widget(self, time, values, title):
         def update():
@@ -224,16 +225,16 @@ class InfoWidget(QWidget):
         self.selected_mussel = mussels.get(selectedId)
         if self.vol_A.isChecked():
             self.plotting_widget(self.selected_mussel.time_array,
-                                 self.selected_mussel.vol_A_array, "Battery A voltage")
+                                 self.selected_mussel.vol_A_array, "Battery A voltage[V]")
         elif self.curr_A.isChecked():
             self.plotting_widget(self.selected_mussel.time_array,
-                                 self.selected_mussel.curr_A_array, "Battery A current")
+                                 self.selected_mussel.curr_A_array, "Battery A current[mA]")
         elif self.vol_B.isChecked():
             self.plotting_widget(self.selected_mussel.time_array,
-                                 self.selected_mussel.vol_B_array, "Battery B voltage")
+                                 self.selected_mussel.vol_B_array, "Battery B voltage[V]")
         elif self.curr_B.isChecked():
             self.plotting_widget(self.selected_mussel.time_array,
-                                 self.selected_mussel.curr_B_array, "Battery B current")
+                                 self.selected_mussel.curr_B_array, "Battery B current[mA]")
         elif self.lat.isChecked():
             self.plotting_widget(self.selected_mussel.time_array,
                                  self.selected_mussel.latitude_array, "Latitude")
@@ -242,10 +243,10 @@ class InfoWidget(QWidget):
                                  self.selected_mussel.longitude_array, "Longitude")
         elif self.press.isChecked():
             self.plotting_widget(self.selected_mussel.time_array,
-                                 self.selected_mussel.press_array, "Pressure")
+                                 self.selected_mussel.press_array, "Pressure[kPa]")
         elif self.temp.isChecked():
             self.plotting_widget(self.selected_mussel.time_array,
-                                 self.selected_mussel.temp_array, "Temperature")
+                                 self.selected_mussel.temp_array, "Temperature[°C]")
 
 """Class used as AxisItem when the real-time values are being plotted. Shows time in format hh:mm:ss"""
 class TimeAxisItem(pg.AxisItem):
