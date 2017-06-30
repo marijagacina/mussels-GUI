@@ -6,7 +6,7 @@ Prerequisites
 - install pyqt4
 - install decorator
 - install pyqtgraph
-- install qgmaps
+- install qgmap
 
 Running GUI:
 python3 mapGUI.py
