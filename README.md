@@ -8,8 +8,8 @@ Prerequisites
 - install pyqtgraph
 - install qgmaps
 
-Running GUI
+Running GUI:
 python3 mapGUI.py
 
-Testing
+Testing:
 python3 publish_json.py
