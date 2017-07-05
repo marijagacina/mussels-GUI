@@ -237,10 +237,10 @@ class InfoWidget(QWidget):
                                  self.selected_mussel.curr_B_array, "Battery B current[mA]")
         elif self.lat.isChecked():
             self.plotting_widget(self.selected_mussel.time_array,
-                                 self.selected_mussel.latitude_array, "Latitude")
+                                 self.selected_mussel.pos_X_array, "Latitude")
         elif self.long.isChecked():
             self.plotting_widget(self.selected_mussel.time_array,
-                                 self.selected_mussel.longitude_array, "Longitude")
+                                 self.selected_mussel.pos_Y_array, "Longitude")
         elif self.press.isChecked():
             self.plotting_widget(self.selected_mussel.time_array,
                                  self.selected_mussel.press_array, "Pressure[kPa]")
